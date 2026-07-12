@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard-header">
+    <h1>Your Habits</h1>
+    <form method="POST" action="{{ url_for('habits.create_habit') }}" class="new-habit-form">
+        <input type="text" name="name" placeholder="e.g. Read 20 minutes" required maxlength="120">
+        <button type="submit" class="btn btn-primary">+ Add Habit</button>
+    </form>
+</div>
+{% if not habit_data %}
+    <p class="empty-state">No habits yet — add your first one above to start building a streak.</p>
+{% endif %}
+<div class="habit-list">
+    {% for item in habit_data %}
+    <div class="habit-card">
+        <div class="habit-card-top">
+            <div>
+                <h2>{{ item.habit.name }}</h2>
+                <div class="stats-row">
+                    <span class="stat">🔥 {{ item.current_streak }} day streak</span>
+                    <span class="stat">🏆 Best: {{ item.longest_streak }}</span>
+                    <span class="stat">📊 {{ item.completion_rate }}% (30d)</span>
+                </div>
+            </div>
+            <div class="habit-actions">
+                <form method="POST" action="{{ url_for('habits.toggle_today', habit_id=item.habit.id) }}">
+                    <button type="submit" class="btn {{ 'btn-done' if item.done_today else 'btn-outline' }}">
+                        {{ '✓ Done today' if item.done_today else 'Mark done' }}
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('habits.delete_habit', habit_id=item.habit.id) }}"
+                      onsubmit="return confirm('Delete this habit and all its history?');">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+        <div class="heatmap">
+            {% for day in item.heatmap %}
+                <div class="heatmap-cell {{ 'filled' if day.done else '' }}" title="{{ day.date }}"></div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
