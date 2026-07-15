@@ -21,7 +21,7 @@ complete, and watch your streaks build on a GitHub-style contribution heatmap.
 ## Getting Started
 
 \`\`\`bash
-git clone https://github.com/yourusername/habit-tracker.git
+git clone https://github.com/ta-ngus/habit-tracker.git
 cd habit-tracker
 python -m venv venv
 source venv/Scripts/activate
